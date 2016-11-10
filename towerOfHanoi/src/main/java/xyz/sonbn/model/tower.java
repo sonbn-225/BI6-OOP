@@ -1,7 +1,28 @@
 package xyz.sonbn.model;
 
+import java.util.Observable;
+import java.util.Stack;
+
 /**
  * Created by SonBN on 10-Nov-16.
  */
-public class tower {
+public class tower extends Observable{
+    private int number;
+    private Stack<disk> diskStack;
+
+    public tower(){
+    }
+
+    public tower(int number){
+        this.number = number;
+        this.diskStack = new Stack<disk>();
+    }
+
+    public void setNumber(int number){
+        this.number = number;
+    }
+
+    public void pushDisk(disk newDisk){
+        this.diskStack.push(newDisk);
+    }
 }
