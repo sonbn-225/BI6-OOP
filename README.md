@@ -11,9 +11,17 @@ Students are expected to:
 Member list
 =====================================
 
-*Add student list of your group here*
+_Group 5:
+- Lê Trung Nghĩa
+- Bùi Viêt Hùng
+- Bùi Ngọc Sơn
+- Nguyễn Hồng Sơn
+- Chu Tuấn Anh
 
 Project description
 =====================================
 
-*Add your project description here*
+_Group 5: Design and develop a Java program to solve the "Tower of Hanoi" problem
+- Applied MVC design pattern to our program
+- Used Java Swing to implement GUI component of our program
+- Used Stack data structure to implement Tower object
