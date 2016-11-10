@@ -1,6 +1,7 @@
 package xyz.sonbn.view;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,13 +24,13 @@ public class mainView extends JPanel implements ActionListener, MouseListener, M
         about = new JMenuItem("About");
 
         JMenu option = new JMenu("Game Option");
-
         option.add(newGame);
         option.add(bestGame);
-        option.add(exit);
         option.add(about);
+        option.add(exit);
 
         menuBar.add(option);
+        menuBar.setBackground(new Color(144, 202, 249));
 
         newGame.addActionListener(this);
         exit.addActionListener(this);
@@ -38,13 +39,22 @@ public class mainView extends JPanel implements ActionListener, MouseListener, M
 
 
         JPanel panel = new JPanel();
+        panel.setBackground(new Color(227, 242, 253));
         resetButton = new JButton("Reset");
+        resetButton.setBackground(new Color(66, 165, 245));
         solveButton = new JButton("Solve");
+        solveButton.setBackground(new Color(66, 165, 245));
         panel.add("Center", resetButton);
         panel.add("Center", solveButton);
 
+        JPanel main = new JPanel();
+        MyPanel myPanel = new MyPanel();
+        main.add(myPanel);
+        main.setBackground(new Color(227, 242, 253));
+        main.repaint();
+
         frame.add("South", panel);
-        frame.add("North", new JLabel("Group 5"));
+        frame.add("Center", main);
         frame.addWindowListener(new CloseListener());
         frame.setSize(1000,720);
         frame.setLocationRelativeTo(null);
@@ -58,7 +68,6 @@ public class mainView extends JPanel implements ActionListener, MouseListener, M
     }
 
     private void init(int numberOfDisk){
-
     }
 
     public void update(Observable o, Object arg) {
