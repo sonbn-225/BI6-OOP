@@ -11,7 +11,8 @@ public class towersOfHanoi {
             towers[i] = new tower(i);
         }
         for (int i = 0; i < numberOfDisk; i++) {
-            disk disk = new disk(0, i, numberOfDisk);
+            int radius = numberOfDisk - i;
+            disk disk = new disk(0, radius, numberOfDisk);
             towers[0].pushDisk(disk);
         }
     }
@@ -21,7 +22,8 @@ public class towersOfHanoi {
             towers[i].removeAllDisk();
         }
         for (int i = 0; i < numberOfDisk; i++) {
-            disk disk = new disk(0, i, numberOfDisk);
+            int radius = numberOfDisk - i;
+            disk disk = new disk(0, radius, numberOfDisk);
             towers[0].pushDisk(disk);
         }
     }

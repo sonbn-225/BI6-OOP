@@ -2,7 +2,6 @@ package xyz.sonbn.view;
 
 import xyz.sonbn.controller.controller;
 import xyz.sonbn.model.disk;
-import xyz.sonbn.model.tower;
 import xyz.sonbn.model.towersOfHanoi;
 
 import javax.swing.*;
@@ -17,8 +16,8 @@ import java.util.Observer;
 public class mainView extends JFrame implements Observer {
     public JMenuItem newGame, bestGame, exit, about;
     private JButton resetButton, solveButton;
-    private JPanel panel, main;
-    private MyPanel myPanel;
+    private JPanel buttonPanel, main;
+    private towersPanel towersPanel;
     private towersOfHanoi towers;
     private disk moveDisk;
     private boolean draggable;
@@ -39,7 +38,7 @@ public class mainView extends JFrame implements Observer {
         about = new JMenuItem("About");
 
         //Menu game option
-        JMenu option = new JMenu("Game Option");
+        JMenu option = new JMenu("Option");
         option.add(newGame);
         option.add(bestGame);
         option.add(about);
@@ -52,36 +51,38 @@ public class mainView extends JFrame implements Observer {
         // Add menu bar to frame
         setJMenuBar(menuBar);
 
-        // Main panel that contain content
-        panel = new JPanel();
-        panel.setBackground(new Color(227, 242, 253));
+        // Main buttonPanel that contain content
+        buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(227, 242, 253));
         resetButton = new JButton("Reset");
         resetButton.setBackground(new Color(66, 165, 245));
         solveButton = new JButton("Solve");
         solveButton.setBackground(new Color(66, 165, 245));
-        panel.add("Center", resetButton);
-        panel.add("Center", solveButton);
+        buttonPanel.add("Center", resetButton);
+        buttonPanel.add("Center", solveButton);
 
         main = new JPanel();
-        myPanel = new MyPanel(towers);
-        main.add(myPanel);
+        towersPanel = new towersPanel(towers);
+        main.add(towersPanel);
         main.setBackground(new Color(227, 242, 253));
-        main.repaint();
 
-        add("South", panel);
+        add("South", buttonPanel);
         add("Center", main);
         addWindowListener(new CloseListener());
         setSize(1000,720);
         setLocationRelativeTo(null);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);}
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        main.repaint();
+    }
 
     public void update(Observable o, Object arg) {
 
     }
 
-    public MyPanel getMyPanel(){
-        return this.myPanel;
+    public towersPanel getTowersPanel(){
+        return this.towersPanel;
     }
 
     public void addController(controller controller){
@@ -92,8 +93,8 @@ public class mainView extends JFrame implements Observer {
         about.addActionListener(controller);
         exit.addActionListener(controller);
 
-        myPanel.addMouseListener(controller);
-        myPanel.addMouseMotionListener(controller);
+        towersPanel.addMouseListener(controller);
+        towersPanel.addMouseMotionListener(controller);
     }
 
     public static class CloseListener extends WindowAdapter {
@@ -104,11 +105,9 @@ public class mainView extends JFrame implements Observer {
     } //CloseListener
 
     public void paint(Graphics g) {
-        myPanel.setTower(towers);
-        myPanel.setMoveDisk(moveDisk);
-        myPanel.setDraggable(draggable);
-        System.out.println("MainView" + towers);
-        System.out.println("Disk main view:" + towers.getTower(0).getDiskStack());
+        towersPanel.setTower(towers);
+        towersPanel.setMoveDisk(moveDisk);
+        towersPanel.setDraggable(draggable);
         super.paint(g); // This will paint the components.
     } // end method paint
 }

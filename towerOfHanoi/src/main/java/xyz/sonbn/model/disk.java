@@ -17,6 +17,15 @@ public class disk {
         this.color = Color.getHSBColor(1.0f * radius/totalDisk, 0.7f, 0.7f);
         this.totalDisk = totalDisk;
         this.state = null;
+        //System.out.println("Number::::: " + this.numberOfTower + "Address: " + this + "State: " + this.state);
+    }
+
+    public void setDisk(disk disk){
+        this.numberOfTower = disk.getNumberOfTower();
+        this.radius = disk.getRadius();
+        this.color = disk.getColor();
+        this.totalDisk = disk.getTotalDisk();
+        this.state = disk.getState();
     }
 
     public int getNumberOfTower() {
@@ -55,7 +64,13 @@ public class disk {
         return state;
     }
 
-    public void setState(Rectangle2D.Double state) {
+    public void setState(double x, double y, double w, double h) {
+        //System.out.println("Number" + this.numberOfTower + "Address: " + this + "State: " + this.state);
+        this.state.setFrame(x,y,w,h);
+    }
+
+    public void setState(Rectangle2D.Double state){
+        //System.out.println("Number::" + this.numberOfTower + "Address: " + this + "State: " + this.state);
         this.state = state;
     }
 }

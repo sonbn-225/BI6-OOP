@@ -25,7 +25,8 @@ public class tower extends Observable{
     }
 
     public void pushDisk(disk newDisk){
-        this.diskStack.push(newDisk);
+        disk disk = new disk(newDisk.getNumberOfTower(), newDisk.getRadius(), newDisk.getTotalDisk());
+        this.diskStack.push(disk);
     }
 
     public void removeAllDisk(){

@@ -16,18 +16,18 @@ import java.util.Observer;
  * Created by SonBN on 10-Nov-16.
  */
 
-public class MyPanel extends JPanel {
+public class towersPanel extends JPanel {
     private towersOfHanoi towers;
     private disk moveDisk;
     private boolean draggable = false;
 
-    public MyPanel(towersOfHanoi tower){
+    public towersPanel(towersOfHanoi tower){
         this.towers = tower;
     }
 
     public void setTower(towersOfHanoi tower){
         this.towers = tower;
-        System.out.println("My Panel" + tower);
+        //System.out.println("My Panel" + tower);
     }
 
     public void setMoveDisk(disk moveDisk){
@@ -50,14 +50,16 @@ public class MyPanel extends JPanel {
         int holder_y2 = getHeight()*9/10;
         int holder_y1 = getHeight()/10;
 
+        graphics2D.setColor(moveDisk.getColor());
+        System.out.println("Panel" + moveDisk + "State: " + moveDisk.getState());
+        System.out.println(draggable);
+        if (moveDisk.getState() != null){
+            graphics2D.fill(moveDisk.getState());
+        }
+
         graphics2D.setColor(Color.black);
         graphics2D.setStroke(new BasicStroke(7));
         graphics2D.drawLine(0,holder_y2,getWidth(),holder_y2);
-
-        graphics2D.setColor(moveDisk.getColor());
-        if (draggable && moveDisk.getRadius() != 0){
-            graphics2D.fill(moveDisk.getState());
-        }
 
         for (int i = 0; i<3; i++){
             drawTower(graphics2D, holder_x, holder_y1, holder_y2, towers.getTower(i));
@@ -78,17 +80,26 @@ public class MyPanel extends JPanel {
                 graphics2D.drawLine(5*x, y1, 5*x, y2);
                 break;
         }
-        System.out.println("Draw " + tower.getNumber() + "  " + tower.getDiskStack());
+        //System.out.println("Draw " + tower.getNumber() + "  " + tower.getDiskStack());
         for (int i = 0; i < tower.getDiskStack().size(); i++) {
-            int number = tower.getDiskStack().size() - i -1;
-            disk disk = tower.getDiskStack().get(number);
+            disk disk = tower.getDiskStack().get(i);
             graphics2D.setColor(disk.getColor());
             if (disk.getState() == null){
                 Rectangle2D.Double state = new Rectangle2D.Double();
                 int magicNumber = disk.getTotalDisk() + 6;
                 int width = getWidth()/(magicNumber - disk.getRadius()),
                         height = getHeight()/(magicNumber+2);
-                state.setFrame(x - width/2, y2 - (i+1)*height, width, height);
+                switch (tower.getNumber()){
+                    case 0:
+                        state.setFrame(x - width/2, y2 - (i+1)*height, width, height);
+                        break;
+                    case 1:
+                        state.setFrame(3*x - width/2, y2 - (i+1)*height, width, height);
+                        break;
+                    case 2:
+                        state.setFrame(5*x - width/2, y2 - (i+1)*height, width, height);
+                        break;
+                }
                 disk.setState(state);
             }
             graphics2D.fill(disk.getState());

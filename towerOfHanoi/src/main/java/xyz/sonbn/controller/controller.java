@@ -23,32 +23,11 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public controller(towersOfHanoi towers, disk moveDisk, boolean draggable, mainView mainView){
         this.tower = towers;
         this.moveDisk = moveDisk;
+        System.out.println("First" + this.moveDisk);
+        System.out.println("Second" + moveDisk);
         this.draggable = draggable;
         this.view = mainView;
 
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
-        if (e.getActionCommand().equals("Reset")){
-            this.tower.resetDisk(currentNumberOfDisk);
-            view.repaint();
-            System.out.println("Reset " + this.tower);//đây ạ
-        }
-        if (e.getActionCommand().equals("Solve")){
-            this.solveProblem();
-        }
-        if (e.getActionCommand().equals("New Game")){
-            newGame();
-        } else if (e.getActionCommand().equals("Best Game")){
-
-        } else if (e.getActionCommand().equals("Exit")){
-            System.exit(0);
-        } else if (e.getActionCommand().equals("About")){
-            System.out.println("ABC");
-            JOptionPane.showMessageDialog(view,
-                    "Coded by SonBN");
-        }
     }
 
     public void newGame(){
@@ -59,11 +38,14 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
             currentNumberOfDisk = (Integer) val;
             this.tower.resetDisk(currentNumberOfDisk);
             view.repaint();
-            System.out.println("New Game" + this.tower);
         }
     }
 
     public void solveProblem(){
+
+    }
+
+    public void move(){
 
     }
 
@@ -73,9 +55,9 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
                 rB=new Rectangle2D.Double(),
                 rC=new Rectangle2D.Double();
 
-        rA.setFrame(0,0,view.getMyPanel().getWidth()/3,view.getMyPanel().getHeight());
-        rB.setFrame(view.getMyPanel().getWidth()/3,0,view.getMyPanel().getWidth()/3,view.getMyPanel().getHeight());
-        rC.setFrame(2*view.getMyPanel().getWidth()/3,0,view.getMyPanel().getWidth()/3,view.getMyPanel().getHeight());
+        rA.setFrame(0,0,view.getTowersPanel().getWidth()/3,view.getTowersPanel().getHeight());
+        rB.setFrame(view.getTowersPanel().getWidth()/3,0,view.getTowersPanel().getWidth()/3,view.getTowersPanel().getHeight());
+        rC.setFrame(2*view.getTowersPanel().getWidth()/3,0,view.getTowersPanel().getWidth()/3,view.getTowersPanel().getHeight());
 
         if(rA.contains(point))
             return 0;
@@ -87,6 +69,27 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
             return -1;
     }
 
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
+        if (e.getActionCommand().equals("Reset")){
+            this.tower.resetDisk(currentNumberOfDisk);
+            view.repaint();
+        }
+        if (e.getActionCommand().equals("Solve")){
+            this.solveProblem();
+        }
+        if (e.getActionCommand().equals("New Game")){
+            newGame();
+        } else if (e.getActionCommand().equals("Best Game")){
+
+        } else if (e.getActionCommand().equals("Exit")){
+            System.exit(0);
+        } else if (e.getActionCommand().equals("About")){
+            JOptionPane.showMessageDialog(view,
+                    "Coded by SonBN");
+        }
+    }
+
     public void mouseClicked(MouseEvent e) {
 
     }
@@ -95,11 +98,9 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
         Point position = e.getPoint();
         int numberOfTower = getCurrentTower(position);
         if (!tower.getTower(numberOfTower).getDiskStack().empty()){
-            moveDisk = tower.getTower(numberOfTower).getDiskStack().peek();
-            System.out.println("Test   "+moveDisk.getState());
-            System.out.println(position);
+            moveDisk.setDisk(tower.getTower(numberOfTower).getDiskStack().peek());
             if (moveDisk.getState().contains(position)){
-                moveDisk = tower.getTower(numberOfTower).getDiskStack().pop();
+                moveDisk.setDisk(tower.getTower(numberOfTower).getDiskStack().pop());
                 ax = moveDisk.getState().getX();
                 ay = moveDisk.getState().getY();
                 w = position.getX() - ax;
@@ -111,20 +112,28 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
                 draggable = false;
             }
         }
+        System.out.println("Mouse Press" + moveDisk);
     }
 
     public void mouseReleased(MouseEvent e) {
         if (moveDisk.getState() != null && draggable){
             Point position = e.getPoint();
+            System.out.println("Move Disk: " + moveDisk.getRadius());
+            System.out.println("Test   "+moveDisk.getState());
+            System.out.println("Color: " + moveDisk.getColor());
+            //System.out.println(position);
             int numberOfTower = getCurrentTower(position);
-            if (!tower.getTower(numberOfTower).getDiskStack().empty()){
-                if (tower.getTower(numberOfTower).getDiskStack().peek().getRadius() < moveDisk.getRadius()){
-                    JOptionPane.showMessageDialog(view,"Wrong Move","Tower Of Hanoi",JOptionPane.ERROR_MESSAGE);
-                    numberOfTower = getCurrentTower(new Point((int) ax, (int) ay));
+            if (numberOfTower != -1){
+                if (!tower.getTower(numberOfTower).getDiskStack().empty()){
+                    if (tower.getTower(numberOfTower).getDiskStack().peek().getRadius() < moveDisk.getRadius()){
+                        JOptionPane.showMessageDialog(view,"Wrong Move","Tower Of Hanoi",JOptionPane.ERROR_MESSAGE);
+                        numberOfTower = getCurrentTower(new Point((int) ax, (int) ay));
+                    }
                 }
             }
 
-            moveDisk.setState(null);
+
+            moveDisk.setNumberOfTower(numberOfTower);
             tower.getTower(numberOfTower).pushDisk(moveDisk);
             moveDisk.setRadius(0);
             moveDisk.setColor(new Color(227, 242, 253));
@@ -146,8 +155,8 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
         int cx = e.getX();
         int cy = e.getY();
         if (moveDisk.getRadius() != 0 && draggable){
-            System.out.println("Drag");
-            moveDisk.setState(new Rectangle2D.Double(cx-w,cy-h,moveDisk.getState().getWidth(),moveDisk.getState().getHeight()));
+            moveDisk.setState(cx-w,cy-h,moveDisk.getState().getWidth(),moveDisk.getState().getHeight());
+            System.out.println("Controller" + moveDisk + "State: " + moveDisk.getState() + draggable);
             view.repaint();
         }
     }
