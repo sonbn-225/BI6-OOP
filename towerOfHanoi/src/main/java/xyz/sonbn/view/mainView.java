@@ -1,5 +1,10 @@
 package xyz.sonbn.view;
 
+import xyz.sonbn.controller.controller;
+import xyz.sonbn.model.disk;
+import xyz.sonbn.model.tower;
+import xyz.sonbn.model.towersOfHanoi;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,36 +14,46 @@ import java.util.Observer;
 /**
  * Created by SonBN on 10-Nov-16.
  */
-public class mainView extends JPanel implements ActionListener, MouseListener, MouseMotionListener, Observer {
+public class mainView extends JFrame implements Observer {
     public JMenuItem newGame, bestGame, exit, about;
-    public JFrame frame;
     private JButton resetButton, solveButton;
+    private JPanel panel, main;
+    private MyPanel myPanel;
+    private towersOfHanoi towers;
+    private disk moveDisk;
+    private boolean draggable;
 
-    public mainView(){
-        frame = new JFrame("Tower of Hanoi_Group 5");
+    public mainView(towersOfHanoi towers, disk moveDisk, boolean draggable){
+        super("Tower of Hanoi_Group 5");
+        this.towers = towers;
+        this.moveDisk = moveDisk;
+        this.draggable = draggable;
+
+        //Main menu bar
         JMenuBar menuBar = new JMenuBar();
 
+        //Menu item
         newGame = new JMenuItem("New Game");
         bestGame = new JMenuItem("Best Game");
         exit = new JMenuItem("Exit");
         about = new JMenuItem("About");
 
+        //Menu game option
         JMenu option = new JMenu("Game Option");
         option.add(newGame);
         option.add(bestGame);
         option.add(about);
         option.add(exit);
 
+        //add menu game option to menu bar and set color of menu bar
         menuBar.add(option);
         menuBar.setBackground(new Color(144, 202, 249));
 
-        newGame.addActionListener(this);
-        exit.addActionListener(this);
+        // Add menu bar to frame
+        setJMenuBar(menuBar);
 
-        frame.setJMenuBar(menuBar);
-
-
-        JPanel panel = new JPanel();
+        // Main panel that contain content
+        panel = new JPanel();
         panel.setBackground(new Color(227, 242, 253));
         resetButton = new JButton("Reset");
         resetButton.setBackground(new Color(66, 165, 245));
@@ -47,75 +62,38 @@ public class mainView extends JPanel implements ActionListener, MouseListener, M
         panel.add("Center", resetButton);
         panel.add("Center", solveButton);
 
-        JPanel main = new JPanel();
-        MyPanel myPanel = new MyPanel();
+        main = new JPanel();
+        myPanel = new MyPanel(towers);
         main.add(myPanel);
         main.setBackground(new Color(227, 242, 253));
         main.repaint();
 
-        frame.add("South", panel);
-        frame.add("Center", main);
-        frame.addWindowListener(new CloseListener());
-        frame.setSize(1000,720);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        addMouseMotionListener(this);
-        addMouseListener(this);
-
-        init(5);
-    }
-
-    private void init(int numberOfDisk){
-    }
+        add("South", panel);
+        add("Center", main);
+        addWindowListener(new CloseListener());
+        setSize(1000,720);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);}
 
     public void update(Observable o, Object arg) {
 
     }
 
-    public void addController(ActionListener controller){
+    public MyPanel getMyPanel(){
+        return this.myPanel;
+    }
+
+    public void addController(controller controller){
         newGame.addActionListener(controller);
         resetButton.addActionListener(controller);
         solveButton.addActionListener(controller);
         bestGame.addActionListener(controller);
         about.addActionListener(controller);
         exit.addActionListener(controller);
-    }
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == newGame) {
-
-        } else if (e.getSource() == exit)
-            System.exit(0);
-    }
-
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e){
-
-    }
-
-    public void mouseEntered(MouseEvent e){
-
-    }
-
-    public void mouseClicked(MouseEvent e){
-
+        myPanel.addMouseListener(controller);
+        myPanel.addMouseMotionListener(controller);
     }
 
     public static class CloseListener extends WindowAdapter {
@@ -124,4 +102,13 @@ public class mainView extends JPanel implements ActionListener, MouseListener, M
             System.exit(0);
         } //windowClosing()
     } //CloseListener
+
+    public void paint(Graphics g) {
+        myPanel.setTower(towers);
+        myPanel.setMoveDisk(moveDisk);
+        myPanel.setDraggable(draggable);
+        System.out.println("MainView" + towers);
+        System.out.println("Disk main view:" + towers.getTower(0).getDiskStack());
+        super.paint(g); // This will paint the components.
+    } // end method paint
 }

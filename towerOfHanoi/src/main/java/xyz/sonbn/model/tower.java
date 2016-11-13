@@ -10,19 +10,25 @@ public class tower extends Observable{
     private int number;
     private Stack<disk> diskStack;
 
-    public tower(){
-    }
 
     public tower(int number){
         this.number = number;
         this.diskStack = new Stack<disk>();
     }
 
-    public void setNumber(int number){
-        this.number = number;
+    public int getNumber(){
+        return this.number;
+    }
+
+    public Stack<disk> getDiskStack() {
+        return diskStack;
     }
 
     public void pushDisk(disk newDisk){
         this.diskStack.push(newDisk);
+    }
+
+    public void removeAllDisk(){
+        this.diskStack.removeAllElements();
     }
 }
