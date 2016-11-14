@@ -10,6 +10,7 @@ public class disk {
     private int numberOfTower, radius, totalDisk;
     private Color color;
     private Rectangle2D.Double state;
+    private int draggable;
 
     public disk(int numberOfTower, int radius, int totalDisk){
         this.numberOfTower = numberOfTower;
@@ -18,6 +19,14 @@ public class disk {
         this.totalDisk = totalDisk;
         this.state = null;
         //System.out.println("Number::::: " + this.numberOfTower + "Address: " + this + "State: " + this.state);
+    }
+
+    public int getDraggable() {
+        return draggable;
+    }
+
+    public void setDraggable(int draggable) {
+        this.draggable = draggable;
     }
 
     public void setDisk(disk disk){

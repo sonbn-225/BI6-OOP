@@ -13,19 +13,22 @@ import java.awt.geom.Rectangle2D;
  * Created by SonBN on 10-Nov-16.
  */
 public class controller implements ActionListener, MouseMotionListener, MouseListener{
-    private towersOfHanoi tower;
+    private towersOfHanoi towersOfHanoi;
     private disk moveDisk;
     private mainView view;
     private int currentNumberOfDisk = 5;
-    private boolean draggable = false;
     private double ax,ay,w,h;
+    private Timer t = new Timer(500, new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            view.repaint();
+        }
+    });
 
-    public controller(towersOfHanoi towers, disk moveDisk, boolean draggable, mainView mainView){
-        this.tower = towers;
+    public controller(towersOfHanoi towers, disk moveDisk, mainView mainView){
+        this.towersOfHanoi = towers;
         this.moveDisk = moveDisk;
         System.out.println("First" + this.moveDisk);
         System.out.println("Second" + moveDisk);
-        this.draggable = draggable;
         this.view = mainView;
 
     }
@@ -36,17 +39,30 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
                 JOptionPane.INFORMATION_MESSAGE, null, values, values[0]);
         if ((Integer) val != JOptionPane.CANCEL_OPTION){
             currentNumberOfDisk = (Integer) val;
-            this.tower.resetDisk(currentNumberOfDisk);
+            this.towersOfHanoi.resetDisk(currentNumberOfDisk);
             view.repaint();
         }
     }
 
     public void solveProblem(){
+        this.towersOfHanoi.resetDisk(currentNumberOfDisk);
+        t.start();
+        try {
+            move(currentNumberOfDisk, 0,1,2);
+        } catch (InterruptedException e){
 
+        }
     }
 
-    public void move(){
-
+    public void move(int m, int tower0, int tower1, int tower2) throws InterruptedException{
+        if (m>0){
+            move(m-1, tower0, tower2, tower1);
+            towersOfHanoi.getTower(tower2).getDiskStack().push(towersOfHanoi.getTower(tower0).getDiskStack().pop());
+            view.getTowersPanel().repaint();
+            Thread.sleep(500);
+            System.out.println("Move disk " + m + " from tower " + tower0 + " to tower " + tower2);
+            move(m-1, tower1, tower0, tower2);
+        }
     }
 
     private int getCurrentTower(Point point){
@@ -72,7 +88,7 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
         if (e.getActionCommand().equals("Reset")){
-            this.tower.resetDisk(currentNumberOfDisk);
+            this.towersOfHanoi.resetDisk(currentNumberOfDisk);
             view.repaint();
         }
         if (e.getActionCommand().equals("Solve")){
@@ -97,26 +113,26 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public void mousePressed(MouseEvent e) {
         Point position = e.getPoint();
         int numberOfTower = getCurrentTower(position);
-        if (!tower.getTower(numberOfTower).getDiskStack().empty()){
-            moveDisk.setDisk(tower.getTower(numberOfTower).getDiskStack().peek());
+        if (!towersOfHanoi.getTower(numberOfTower).getDiskStack().empty()){
+            moveDisk.setDisk(towersOfHanoi.getTower(numberOfTower).getDiskStack().peek());
             if (moveDisk.getState().contains(position)){
-                moveDisk.setDisk(tower.getTower(numberOfTower).getDiskStack().pop());
+                moveDisk.setDisk(towersOfHanoi.getTower(numberOfTower).getDiskStack().pop());
                 ax = moveDisk.getState().getX();
                 ay = moveDisk.getState().getY();
                 w = position.getX() - ax;
                 h = position.getY() - ay;
-                draggable = true;
+                moveDisk.setDraggable(1);
             } else {
                 moveDisk.setState(null);
                 moveDisk.setColor(new Color(227, 242, 253));
-                draggable = false;
+                moveDisk.setDraggable(0);
             }
         }
         System.out.println("Mouse Press" + moveDisk);
     }
 
     public void mouseReleased(MouseEvent e) {
-        if (moveDisk.getState() != null && draggable){
+        if (moveDisk.getState() != null && moveDisk.getDraggable() == 1){
             Point position = e.getPoint();
             System.out.println("Move Disk: " + moveDisk.getRadius());
             System.out.println("Test   "+moveDisk.getState());
@@ -124,8 +140,8 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
             //System.out.println(position);
             int numberOfTower = getCurrentTower(position);
             if (numberOfTower != -1){
-                if (!tower.getTower(numberOfTower).getDiskStack().empty()){
-                    if (tower.getTower(numberOfTower).getDiskStack().peek().getRadius() < moveDisk.getRadius()){
+                if (!towersOfHanoi.getTower(numberOfTower).getDiskStack().empty()){
+                    if (towersOfHanoi.getTower(numberOfTower).getDiskStack().peek().getRadius() < moveDisk.getRadius()){
                         JOptionPane.showMessageDialog(view,"Wrong Move","Tower Of Hanoi",JOptionPane.ERROR_MESSAGE);
                         numberOfTower = getCurrentTower(new Point((int) ax, (int) ay));
                     }
@@ -134,10 +150,10 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
 
 
             moveDisk.setNumberOfTower(numberOfTower);
-            tower.getTower(numberOfTower).pushDisk(moveDisk);
+            towersOfHanoi.getTower(numberOfTower).pushDisk(moveDisk);
             moveDisk.setRadius(0);
             moveDisk.setColor(new Color(227, 242, 253));
-            draggable = false;
+            moveDisk.setDraggable(0);
             view.repaint();
         }
 
@@ -154,9 +170,8 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public void mouseDragged(MouseEvent e) {
         int cx = e.getX();
         int cy = e.getY();
-        if (moveDisk.getRadius() != 0 && draggable){
+        if (moveDisk.getRadius() != 0 && moveDisk.getDraggable() == 1){
             moveDisk.setState(cx-w,cy-h,moveDisk.getState().getWidth(),moveDisk.getState().getHeight());
-            System.out.println("Controller" + moveDisk + "State: " + moveDisk.getState() + draggable);
             view.repaint();
         }
     }

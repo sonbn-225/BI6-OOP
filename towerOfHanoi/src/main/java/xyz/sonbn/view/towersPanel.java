@@ -19,7 +19,7 @@ import java.util.Observer;
 public class towersPanel extends JPanel {
     private towersOfHanoi towers;
     private disk moveDisk;
-    private boolean draggable = false;
+    private int draggable;
 
     public towersPanel(towersOfHanoi tower){
         this.towers = tower;
@@ -27,14 +27,13 @@ public class towersPanel extends JPanel {
 
     public void setTower(towersOfHanoi tower){
         this.towers = tower;
-        //System.out.println("My Panel" + tower);
     }
 
     public void setMoveDisk(disk moveDisk){
         this.moveDisk = moveDisk;
     }
 
-    public void setDraggable(boolean draggable){
+    public void setDraggable(int draggable){
         this.draggable = draggable;
     }
 
@@ -53,7 +52,7 @@ public class towersPanel extends JPanel {
         graphics2D.setColor(moveDisk.getColor());
         System.out.println("Panel" + moveDisk + "State: " + moveDisk.getState());
         System.out.println(draggable);
-        if (moveDisk.getState() != null){
+        if (moveDisk.getDraggable() == 1 && moveDisk.getState() != null){
             graphics2D.fill(moveDisk.getState());
         }
 
@@ -66,7 +65,7 @@ public class towersPanel extends JPanel {
         }
     }
 
-    private void drawTower(Graphics2D graphics2D, int x, int y1, int y2, tower tower){
+    synchronized private void drawTower(Graphics2D graphics2D, int x, int y1, int y2, tower tower){
         graphics2D.setStroke(new BasicStroke(7));
         graphics2D.setColor(Color.BLACK);
         switch (tower.getNumber()){

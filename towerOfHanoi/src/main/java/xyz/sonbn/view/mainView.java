@@ -20,13 +20,11 @@ public class mainView extends JFrame implements Observer {
     private towersPanel towersPanel;
     private towersOfHanoi towers;
     private disk moveDisk;
-    private boolean draggable;
 
-    public mainView(towersOfHanoi towers, disk moveDisk, boolean draggable){
+    public mainView(towersOfHanoi towers, disk moveDisk){
         super("Tower of Hanoi_Group 5");
         this.towers = towers;
         this.moveDisk = moveDisk;
-        this.draggable = draggable;
 
         //Main menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -107,7 +105,7 @@ public class mainView extends JFrame implements Observer {
     public void paint(Graphics g) {
         towersPanel.setTower(towers);
         towersPanel.setMoveDisk(moveDisk);
-        towersPanel.setDraggable(draggable);
+        System.out.println("ABBBBB");
         super.paint(g); // This will paint the components.
     } // end method paint
 }
