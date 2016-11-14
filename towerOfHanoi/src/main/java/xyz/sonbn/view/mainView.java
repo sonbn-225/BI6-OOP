@@ -13,8 +13,8 @@ import java.util.Observer;
 /**
  * Created by SonBN on 10-Nov-16.
  */
-public class mainView extends JFrame implements Observer {
-    public JMenuItem newGame, bestGame, exit, about;
+public class mainView extends JFrame {
+    private JMenuItem newGame, bestGame, exit, about;
     private JButton resetButton, solveButton;
     private JPanel buttonPanel, main;
     private towersPanel towersPanel;
@@ -75,10 +75,6 @@ public class mainView extends JFrame implements Observer {
         main.repaint();
     }
 
-    public void update(Observable o, Object arg) {
-
-    }
-
     public towersPanel getTowersPanel(){
         return this.towersPanel;
     }
@@ -102,10 +98,10 @@ public class mainView extends JFrame implements Observer {
         } //windowClosing()
     } //CloseListener
 
+
     public void paint(Graphics g) {
         towersPanel.setTower(towers);
         towersPanel.setMoveDisk(moveDisk);
-        System.out.println("ABBBBB");
-        super.paint(g); // This will paint the components.
-    } // end method paint
+        super.paint(g);
+    }
 }

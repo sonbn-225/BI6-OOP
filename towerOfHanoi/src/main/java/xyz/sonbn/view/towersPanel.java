@@ -33,10 +33,6 @@ public class towersPanel extends JPanel {
         this.moveDisk = moveDisk;
     }
 
-    public void setDraggable(int draggable){
-        this.draggable = draggable;
-    }
-
 
     @Override
     public void paintComponent(Graphics graphics){
@@ -52,7 +48,7 @@ public class towersPanel extends JPanel {
         graphics2D.setColor(moveDisk.getColor());
         System.out.println("Panel" + moveDisk + "State: " + moveDisk.getState());
         System.out.println(draggable);
-        if (moveDisk.getDraggable() == 1 && moveDisk.getState() != null){
+        if (moveDisk.getDraggable() && moveDisk.getState() != null){
             graphics2D.fill(moveDisk.getState());
         }
 
@@ -65,7 +61,7 @@ public class towersPanel extends JPanel {
         }
     }
 
-    synchronized private void drawTower(Graphics2D graphics2D, int x, int y1, int y2, tower tower){
+    private void drawTower(Graphics2D graphics2D, int x, int y1, int y2, tower tower){
         graphics2D.setStroke(new BasicStroke(7));
         graphics2D.setColor(Color.BLACK);
         switch (tower.getNumber()){
