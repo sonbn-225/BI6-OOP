@@ -38,6 +38,7 @@ public class towersPanel extends JPanel {
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
+
         graphics2D.setColor(new Color(227, 242, 253));
         graphics2D.fillRect(0,0, getWidth(), getHeight());
 
@@ -75,7 +76,6 @@ public class towersPanel extends JPanel {
                 graphics2D.drawLine(5*x, y1, 5*x, y2);
                 break;
         }
-        //System.out.println("Draw " + tower.getNumber() + "  " + tower.getDiskStack());
         for (int i = 0; i < tower.getDiskStack().size(); i++) {
             disk disk = tower.getDiskStack().get(i);
             graphics2D.setColor(disk.getColor());
@@ -84,6 +84,7 @@ public class towersPanel extends JPanel {
                 int magicNumber = disk.getTotalDisk() + 6;
                 int width = getWidth()/(magicNumber - disk.getRadius()),
                         height = getHeight()/(magicNumber+2);
+
                 switch (tower.getNumber()){
                     case 0:
                         state.setFrame(x - width/2, y2 - (i+1)*height, width, height);

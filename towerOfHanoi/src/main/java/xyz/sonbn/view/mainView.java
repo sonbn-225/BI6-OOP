@@ -14,7 +14,7 @@ import java.util.Observer;
  * Created by SonBN on 10-Nov-16.
  */
 public class mainView extends JFrame {
-    private JMenuItem newGame, bestGame, exit, about;
+    private JMenuItem newGame, exit, about;
     private JButton resetButton, solveButton;
     private JPanel buttonPanel, main;
     private towersPanel towersPanel;
@@ -31,14 +31,12 @@ public class mainView extends JFrame {
 
         //Menu item
         newGame = new JMenuItem("New Game");
-        bestGame = new JMenuItem("Best Game");
         exit = new JMenuItem("Exit");
         about = new JMenuItem("About");
 
         //Menu game option
         JMenu option = new JMenu("Option");
         option.add(newGame);
-        option.add(bestGame);
         option.add(about);
         option.add(exit);
 
@@ -83,7 +81,6 @@ public class mainView extends JFrame {
         newGame.addActionListener(controller);
         resetButton.addActionListener(controller);
         solveButton.addActionListener(controller);
-        bestGame.addActionListener(controller);
         about.addActionListener(controller);
         exit.addActionListener(controller);
 

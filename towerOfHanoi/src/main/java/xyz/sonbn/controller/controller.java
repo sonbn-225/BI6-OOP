@@ -1,13 +1,16 @@
 package xyz.sonbn.controller;
 
 import xyz.sonbn.model.disk;
+import xyz.sonbn.model.step;
 import xyz.sonbn.model.towersOfHanoi;
 import xyz.sonbn.view.mainView;
 
 import javax.swing.*;
+import java.util.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
+import java.util.*;
 
 /**
  * Created by SonBN on 10-Nov-16.
@@ -18,6 +21,7 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     private mainView view;
     private int currentNumberOfDisk = 5;
     private double ax,ay,w,h;
+    private ArrayList<step> steps = new ArrayList<step>();
 
     public controller(towersOfHanoi towers, disk moveDisk, mainView mainView){
         this.towersOfHanoi = towers;
@@ -39,20 +43,29 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public void solveProblem(){
         this.towersOfHanoi.resetDisk(currentNumberOfDisk);
         move(currentNumberOfDisk, 0,1,2);
+        makeMove();
     }
 
-    public void move(int m, int tower0, int tower1, int tower2){
-        if (m>0){
-            move(m-1, tower0, tower2, tower1);
-            towersOfHanoi.getTower(tower2).getDiskStack().push(towersOfHanoi.getTower(tower0).getDiskStack().pop());
-            try {
-                Thread.sleep(300);
-            }
-            catch (Exception e) {
-            }
-            view.repaint();
-            System.out.println("Move disk " + m + " from tower " + tower0 + " to tower " + tower2);
-            move(m-1, tower1, tower0, tower2);
+    private void move(int numberOfDisk, int tower0, int tower1, int tower2){
+        if (numberOfDisk>0){
+            move(numberOfDisk-1, tower0, tower2, tower1);
+            steps.add(new step(tower0, tower2));
+            move(numberOfDisk-1, tower1, tower0, tower2);
+        }
+    }
+
+    private void makeMove(){
+        Timer timer = new Timer();
+        for(int i=0;i<steps.size(); i++){
+            final step step = steps.get(i);
+            System.out.println("Move disk from tower " + step.getFromTower() + " to tower " + step.getToTower());
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    towersOfHanoi.getTower(step.getToTower()).pushDisk(towersOfHanoi.getTower(step.getFromTower()).getDiskStack().pop());
+                    view.getTowersPanel().repaint();
+                }
+            }, i*1000);
         }
     }
 
@@ -87,8 +100,6 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
         }
         if (e.getActionCommand().equals("New Game")){
             newGame();
-        } else if (e.getActionCommand().equals("Best Game")){
-
         } else if (e.getActionCommand().equals("Exit")){
             System.exit(0);
         } else if (e.getActionCommand().equals("About")){
@@ -125,10 +136,6 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     public void mouseReleased(MouseEvent e) {
         if (moveDisk.getState() != null && moveDisk.getDraggable()){
             Point position = e.getPoint();
-            System.out.println("Move Disk: " + moveDisk.getRadius());
-            System.out.println("Test   "+moveDisk.getState());
-            System.out.println("Color: " + moveDisk.getColor());
-            //System.out.println(position);
             int numberOfTower = getCurrentTower(position);
             if (numberOfTower != -1){
                 if (!towersOfHanoi.getTower(numberOfTower).getDiskStack().empty()){
