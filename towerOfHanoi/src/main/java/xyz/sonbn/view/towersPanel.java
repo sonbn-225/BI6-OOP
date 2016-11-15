@@ -47,8 +47,6 @@ public class towersPanel extends JPanel {
         int holder_y1 = getHeight()/10;
 
         graphics2D.setColor(moveDisk.getColor());
-        System.out.println("Panel" + moveDisk + "State: " + moveDisk.getState());
-        System.out.println(draggable);
         if (moveDisk.getDraggable() && moveDisk.getState() != null){
             graphics2D.fill(moveDisk.getState());
         }

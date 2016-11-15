@@ -1,7 +1,6 @@
 package xyz.sonbn.controller;
 
 import xyz.sonbn.model.disk;
-import xyz.sonbn.model.step;
 import xyz.sonbn.model.towersOfHanoi;
 import xyz.sonbn.view.mainView;
 
@@ -21,7 +20,7 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     private mainView view;
     private int currentNumberOfDisk = 5;
     private double ax,ay,w,h;
-    private ArrayList<step> steps = new ArrayList<step>();
+    private ArrayList<Integer> steps = new ArrayList<Integer>();
 
     public controller(towersOfHanoi towers, disk moveDisk, mainView mainView){
         this.towersOfHanoi = towers;
@@ -49,23 +48,25 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     private void move(int numberOfDisk, int tower0, int tower1, int tower2){
         if (numberOfDisk>0){
             move(numberOfDisk-1, tower0, tower2, tower1);
-            steps.add(new step(tower0, tower2));
+            steps.add(tower0);
+            steps.add(tower2);
             move(numberOfDisk-1, tower1, tower0, tower2);
         }
     }
 
     private void makeMove(){
         Timer timer = new Timer();
-        for(int i=0;i<steps.size(); i++){
-            final step step = steps.get(i);
-            System.out.println("Move disk from tower " + step.getFromTower() + " to tower " + step.getToTower());
+        for(int i=0;i<steps.size(); i+=2){
+            final int towerSource = steps.get(i);
+            final int towerDestination = steps.get(i+1);
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    towersOfHanoi.getTower(step.getToTower()).pushDisk(towersOfHanoi.getTower(step.getFromTower()).getDiskStack().pop());
+                    towersOfHanoi.getTower(towerDestination).pushDisk(towersOfHanoi.getTower(towerSource).getDiskStack().pop());
+                    System.out.println("Move disk from tower " + towerSource + " to tower " + towerDestination);
                     view.getTowersPanel().repaint();
                 }
-            }, i*1000);
+            }, i*700);
         }
     }
 
@@ -90,7 +91,6 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
         if (e.getActionCommand().equals("Reset")){
             this.towersOfHanoi.resetDisk(currentNumberOfDisk);
             view.repaint();
@@ -130,7 +130,6 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
                 moveDisk.setDraggable(false);
             }
         }
-        System.out.println("Mouse Press" + moveDisk);
     }
 
     public void mouseReleased(MouseEvent e) {
