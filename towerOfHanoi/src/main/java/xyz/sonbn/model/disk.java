@@ -18,7 +18,6 @@ public class disk {
         this.color = Color.getHSBColor(1.0f * radius/totalDisk, 0.7f, 0.7f);
         this.totalDisk = totalDisk;
         this.state = null;
-        //System.out.println("Number::::: " + this.numberOfTower + "Address: " + this + "State: " + this.state);
     }
 
     public boolean getDraggable() {

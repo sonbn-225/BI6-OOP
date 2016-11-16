@@ -6,7 +6,7 @@ import java.util.Stack;
 /**
  * Created by SonBN on 10-Nov-16.
  */
-public class tower extends Observable{
+public class tower {
     private int number;
     private Stack<disk> diskStack;
 

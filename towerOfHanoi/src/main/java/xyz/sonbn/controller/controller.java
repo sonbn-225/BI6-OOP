@@ -66,7 +66,7 @@ public class controller implements ActionListener, MouseMotionListener, MouseLis
                     System.out.println("Move disk from tower " + towerSource + " to tower " + towerDestination);
                     view.getTowersPanel().repaint();
                 }
-            }, i*700);
+            }, i*500);
         }
     }
 
